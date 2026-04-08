@@ -1,0 +1,92 @@
+<section class="page">
+  <a mat-button routerLink="/fondos" class="back">← Volver</a>
+
+  @if (fund$ | async; as fund) {
+    @if (!fund) {
+      <div class="alert alert--error mat-body-medium">Fondo no encontrado.</div>
+    } @else {
+      <div class="head">
+        <div>
+          <h2 class="mat-headline-small">{{ fund.name }}</h2>
+          <div class="sub mat-body-medium">
+            <span class="chip mat-body-small">{{ fund.category }}</span>
+            <span class="dot">•</span>
+            <span class="muted">Mínimo: <strong>{{ fund.minimumAmountCop | moneyCop }}</strong></span>
+          </div>
+        </div>
+        <mat-card appearance="outlined" class="kpi">
+          <mat-card-content>
+            <div class="kpi__label">Saldo disponible</div>
+            <div class="kpi__value">{{ (balance$ | async) ?? 0 | moneyCop }}</div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <mat-card appearance="outlined" class="subscribe-card">
+        <mat-card-header>
+          <mat-card-title>Suscribirme a este fondo</mat-card-title>
+          <mat-card-subtitle>
+            Ingresa un monto mayor o igual al mínimo y elige el método de notificación.
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          @if (submitError(); as err) {
+            <div class="alert alert--error mat-body-medium">{{ err }}</div>
+          }
+
+          <form [formGroup]="form" (ngSubmit)="submit(fund.id)" class="form">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>{{ amountLabel() }}</mat-label>
+              <input
+                matInput
+                type="number"
+                inputmode="numeric"
+                formControlName="amountCop"
+                [attr.min]="fund.minimumAmountCop"
+                placeholder="Ej: 100000"
+              />
+              @if ((amountCtrl.dirty || amountCtrl.touched) && amountCtrl.invalid) {
+                <mat-error>
+                  @if (amountCtrl.hasError('required')) {
+                    El monto es requerido.
+                  } @else if (amountCtrl.hasError('insufficientBalance')) {
+                    El monto supera tu saldo disponible
+                  } @else if (amountCtrl.hasError('min')) {
+                    El monto no cumple el mínimo del fondo.
+                  }
+                </mat-error>
+              }
+            </mat-form-field>
+
+            <div class="radio-block">
+              <div class="radio-label mat-body-medium">Método de notificación</div>
+              <mat-radio-group formControlName="notificationMethod" class="radio-group">
+                <mat-radio-button value="EMAIL">Email</mat-radio-button>
+                <mat-radio-button value="SMS">SMS</mat-radio-button>
+              </mat-radio-group>
+            </div>
+
+            <button
+              mat-flat-button
+              color="primary"
+              type="submit"
+              [disabled]="submitting() || form.invalid"
+            >
+              @if (submitting()) {
+                Procesando…
+              } @else {
+                Suscribirme
+              }
+            </button>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    }
+  } @else {
+    <mat-card appearance="outlined" class="skeleton-card">
+      <mat-card-content>
+        <div class="skeleton" aria-busy="true"></div>
+      </mat-card-content>
+    </mat-card>
+  }
+</section>

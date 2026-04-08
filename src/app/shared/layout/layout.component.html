@@ -1,0 +1,58 @@
+<div class="app">
+  <mat-toolbar class="header-toolbar" id="onboarding-target-header">
+    <div class="brand">
+      <div class="brand__title">BTG | Fondos</div>
+      <div class="brand__subtitle">Manejo de fondos (FPV/FIC)</div>
+    </div>
+    <span class="toolbar-spacer"></span>
+    <button
+      mat-stroked-button
+      type="button"
+      id="onboarding-target-ayuda"
+      class="help-btn"
+      (click)="openOnboarding()"
+    >
+      Cómo funciona
+    </button>
+    <mat-card class="balance-card" appearance="outlined" id="onboarding-target-saldo">
+      <mat-card-content class="balance-card__inner">
+        <div class="balance__label">Saldo</div>
+        <div class="balance__value">{{ (balance$ | async) ?? 0 | moneyCop }}</div>
+      </mat-card-content>
+    </mat-card>
+  </mat-toolbar>
+
+  <nav class="nav" aria-label="Navegación principal" id="onboarding-target-nav">
+    <a
+      mat-button
+      id="onboarding-target-nav-fondos"
+      routerLink="/fondos"
+      routerLinkActive="nav-link--active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      Fondos
+    </a>
+    <a
+      mat-button
+      id="onboarding-target-nav-portafolio"
+      routerLink="/portafolio"
+      routerLinkActive="nav-link--active"
+    >
+      Mi portafolio
+    </a>
+    <a
+      mat-button
+      id="onboarding-target-nav-historial"
+      routerLink="/historial"
+      routerLinkActive="nav-link--active"
+    >
+      Historial
+    </a>
+  </nav>
+
+  <main id="onboarding-target-main" class="main" role="main">
+    <router-outlet />
+  </main>
+</div>
+
+<app-onboarding />

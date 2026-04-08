@@ -1,0 +1,89 @@
+@if (visible()) {
+  @if (spotlightRect(); as sp) {
+    <div
+      class="onboarding-dim onboarding-dim--top"
+      [style.height.px]="sp.top"
+      (click)="dismissOverlay()"
+      aria-hidden="true"
+    ></div>
+    <div
+      class="onboarding-dim onboarding-dim--left"
+      [style.top.px]="sp.top"
+      [style.left.px]="0"
+      [style.width.px]="sp.left"
+      [style.height.px]="sp.height"
+      (click)="dismissOverlay()"
+      aria-hidden="true"
+    ></div>
+    <div
+      class="onboarding-dim onboarding-dim--right"
+      [style.top.px]="sp.top"
+      [style.left.px]="sp.left + sp.width"
+      [style.right.px]="0"
+      [style.height.px]="sp.height"
+      (click)="dismissOverlay()"
+      aria-hidden="true"
+    ></div>
+    <div
+      class="onboarding-dim onboarding-dim--bottom"
+      [style.top.px]="sp.top + sp.height"
+      (click)="dismissOverlay()"
+      aria-hidden="true"
+    ></div>
+    <div
+      class="onboarding-highlight"
+      [style.top.px]="sp.top"
+      [style.left.px]="sp.left"
+      [style.width.px]="sp.width"
+      [style.height.px]="sp.height"
+      aria-hidden="true"
+    ></div>
+  } @else {
+    <div class="onboarding-backdrop" (click)="dismissOverlay()" aria-hidden="true"></div>
+  }
+
+  <div
+    class="onboarding"
+    [class.onboarding--anchored]="spotlightRect()"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-labelledby]="'onboarding-title'"
+    [ngStyle]="panelStyle()"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="onboarding__head">
+      <div class="onboarding__step">Paso {{ stepIndex() + 1 }} de {{ steps.length }}</div>
+      <button type="button" class="onboarding__close" (click)="dismissOverlay()" aria-label="Cerrar">
+        ×
+      </button>
+    </div>
+
+    <h2 id="onboarding-title" class="onboarding__title">{{ current().title }}</h2>
+    <p class="onboarding__body">{{ current().body }}</p>
+    @if (current().hint) {
+      <p class="onboarding__hint">{{ current().hint }}</p>
+    }
+
+    <div class="onboarding__dots" aria-hidden="true">
+      @for (s of steps; track $index) {
+        <span class="dot" [class.dot--active]="$index === stepIndex()"></span>
+      }
+    </div>
+
+    <div class="onboarding__actions">
+      <button type="button" class="btn btn--ghost" (click)="skip()">Omitir tour</button>
+      <div class="onboarding__nav">
+        <button type="button" class="btn btn--ghost" (click)="prev()" [disabled]="isFirst()">
+          Atrás
+        </button>
+        <button type="button" class="btn btn--primary" (click)="next()">
+          @if (isLast()) {
+            Comenzar
+          } @else {
+            Siguiente
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+}
