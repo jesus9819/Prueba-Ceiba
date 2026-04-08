@@ -30,6 +30,16 @@ npm start
 
 Abrir `http://localhost:4200/`.
 
+## Validaciones y reglas de negocio (UI)
+
+- **Suscripción**:
+  - Monto **requerido**
+  - Monto **≥ mínimo del fondo**
+  - Monto **≤ saldo disponible** (muestra: “El monto supera tu saldo disponible”)
+- **Cancelación**:
+  - Monto **requerido** y **> 0**
+  - Monto **≤ monto invertido** en el fondo
+
 ## Onboarding
 
 Al cargar la app se muestra un **tour en 4 pasos** (si aún no lo cerraste para **esta compilación**). Cada paso **resalta en pantalla** el elemento correspondiente y el **panel del tour** muestra título, instrucciones y pistas. Puedes reabrirlo con **Cómo funciona** en la cabecera.
@@ -54,7 +64,12 @@ Antes de **`npm run build`** se ejecuta `scripts/write-build-stamp.mjs`, que act
 
 La app persiste saldo/posiciones/transacciones en **`localStorage`** (para simular backend).
 
-- **Reset manual**: borrar la key `btg_funds_state_v1` en el `localStorage` del navegador.
+### Persistencia (localStorage)
+
+- **Estado**: `btg_funds_state_v1`
+- **Onboarding (por build)**: `btg_onboarding_release_v2`
+
+**Reset manual**: borrar la key `btg_funds_state_v1` en el `localStorage` del navegador.
 
 ## Scripts útiles
 
@@ -68,6 +83,12 @@ npm run build
 # unit tests
 npm test
 ```
+
+## Test plan (manual)
+
+- **Fondos**: abrir detalle → probar monto: vacío / menor al mínimo / mayor al saldo / válido
+- **Portafolio**: abrir modal → cancelar: válido / inválido (más de lo invertido) y verificar saldo
+- **Historial**: verificar transacciones (suscripción/cancelación)
 
 ## Estructura (alto nivel)
 
