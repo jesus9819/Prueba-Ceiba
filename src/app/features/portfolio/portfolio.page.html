@@ -1,0 +1,104 @@
+<section class="page">
+  <div class="head">
+    <div>
+      <h2 class="mat-headline-small">Mi portafolio</h2>
+      <p class="muted mat-body-medium">Aquí puedes cancelar tu participación en un fondo.</p>
+    </div>
+    <a mat-stroked-button routerLink="/fondos">Ir a fondos</a>
+  </div>
+
+  @if (!hasSelection()) {
+    @if (error$ | async; as err) {
+      <div class="alert alert--error mat-body-medium">{{ err }}</div>
+    }
+  }
+
+  @if (loading$ | async) {
+    <div class="loading-wrap" aria-busy="true">
+      <mat-progress-spinner mode="indeterminate" diameter="48" />
+    </div>
+  } @else {
+    @if (holdings$ | async; as holdings) {
+      @if (holdings.length === 0) {
+        <mat-card appearance="outlined" class="empty-card">
+          <mat-card-content>
+            <div class="empty__title mat-title-medium">Aún no tienes inversiones.</div>
+            <p class="muted mat-body-medium">Ve a «Fondos» y realiza una suscripción.</p>
+          </mat-card-content>
+        </mat-card>
+      } @else {
+        <div class="grid">
+          @for (h of holdings; track h.fundId) {
+            <mat-card appearance="outlined">
+              <mat-card-content>
+                <div class="row">
+                  <div>
+                    <div class="title mat-title-medium">{{ h.fundName }}</div>
+                    <div class="muted mat-body-medium">Categoría: <strong>{{ h.category }}</strong></div>
+                  </div>
+                  <span class="amount mat-title-medium">{{ h.amountCop | moneyCop }}</span>
+                </div>
+                <div class="actions">
+                  <button mat-stroked-button color="primary" type="button" (click)="openCancel(h.fundId, h.amountCop)">
+                    Cancelar
+                  </button>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          }
+        </div>
+      }
+    }
+  }
+
+  @if (hasSelection()) {
+    <div class="modal-backdrop" (click)="closeCancel()" aria-hidden="true"></div>
+    <mat-card class="modal" appearance="outlined" role="dialog" aria-modal="true" aria-label="Cancelar participación">
+      <mat-card-header class="modal__head">
+        <mat-card-title>Cancelar participación</mat-card-title>
+        <button matIconButton type="button" (click)="closeCancel()" aria-label="Cerrar">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-card-header>
+      <mat-card-content>
+        @if (modalError(); as err) {
+          <div class="alert alert--error mat-body-medium">{{ err }}</div>
+        }
+        <p class="muted mat-body-medium">
+          Disponible para cancelar: <strong>{{ selectedHoldingCop() | moneyCop }}</strong>
+        </p>
+
+        <form [formGroup]="form" (ngSubmit)="confirmCancel()" class="form">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Monto a cancelar (COP)</mat-label>
+            <input
+              matInput
+              type="number"
+              inputmode="numeric"
+              formControlName="amountCop"
+              [attr.min]="1"
+              [attr.max]="selectedHoldingCop()"
+              placeholder="Ej: 50000"
+            />
+            @if ((amountCtrl.dirty || amountCtrl.touched) && amountCtrl.invalid) {
+              <mat-error>
+                @if (amountCtrl.hasError('required')) {
+                  El monto es requerido.
+                } @else if (amountCtrl.hasError('min')) {
+                  El monto debe ser mayor a 0.
+                }
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <div class="modal__actions">
+            <button mat-button type="button" (click)="closeCancel()">Cerrar</button>
+            <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">
+              Confirmar cancelación
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  }
+</section>

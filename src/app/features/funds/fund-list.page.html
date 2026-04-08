@@ -1,0 +1,48 @@
+<section class="page">
+  <div class="page__head">
+    <div>
+      <h2 class="mat-headline-small">Fondos disponibles</h2>
+      <p class="muted mat-body-medium">Selecciona un fondo para ver el detalle y suscribirte.</p>
+    </div>
+  </div>
+
+  @if (error$ | async; as err) {
+    <div class="alert alert--error mat-body-medium">{{ err }}</div>
+  }
+
+  @if (loading$ | async) {
+    <div class="loading-wrap" aria-busy="true" aria-label="Cargando fondos">
+      <mat-progress-spinner mode="indeterminate" diameter="48" />
+    </div>
+  } @else {
+    @if (holdings$ | async; as holdings) {
+      <div class="grid">
+        @for (fund of (funds$ | async); track trackById($index, fund)) {
+          <a class="fund-link" [routerLink]="['/fondos', fund.id]">
+            <mat-card appearance="outlined" class="fund-card">
+              <mat-card-header class="fund-card__header">
+                <mat-card-title class="fund-card__title">{{ fund.name }}</mat-card-title>
+                <mat-chip-set aria-label="Categoría">
+                  <mat-chip [highlighted]="fund.category === 'FPV'">{{ fund.category }}</mat-chip>
+                </mat-chip-set>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="meta">
+                  <div class="meta__row">
+                    <span class="muted">Mínimo</span>
+                    <strong>{{ fund.minimumAmountCop | moneyCop }}</strong>
+                  </div>
+                  <div class="meta__row">
+                    <span class="muted">Invertido</span>
+                    <strong>{{ (holdings[fund.id] || 0) | moneyCop }}</strong>
+                  </div>
+                </div>
+                <p class="cta mat-body-medium">Ver detalle →</p>
+              </mat-card-content>
+            </mat-card>
+          </a>
+        }
+      </div>
+    }
+  }
+</section>

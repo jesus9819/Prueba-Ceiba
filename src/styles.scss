@@ -1,0 +1,234 @@
+@use '@angular/material' as mat;
+
+/* Tema fintech moderno (Material 3): violeta + rose, con soporte light/dark */
+html {
+  color-scheme: light dark;
+  height: 100%;
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$violet-palette,
+        tertiary: mat.$rose-palette,
+        theme-type: color-scheme,
+      ),
+      typography: Roboto,
+      density: -1,
+    )
+  );
+}
+
+:root {
+  --app-font-display: 'Plus Jakarta Sans', Roboto, system-ui, sans-serif;
+  --app-radius-lg: 20px;
+  --app-radius-md: 14px;
+  /* Elevación (ajustada a dark): menos “sombra negra”, más profundidad */
+  --app-shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.18), 0 2px 10px rgba(0, 0, 0, 0.12);
+  --app-shadow-lift: 0 22px 60px rgba(0, 0, 0, 0.28), 0 10px 22px rgba(0, 0, 0, 0.18);
+  --app-line-subtle: color-mix(in srgb, var(--mat-sys-outline-variant) 62%, transparent);
+  --app-glass: color-mix(in srgb, var(--mat-sys-surface-container-high) 82%, transparent);
+}
+
+@keyframes app-page-in {
+  from {
+    opacity: 0.92;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Contenedor de cada ruta: transición mínima al navegar (demo / percepción de pulido) */
+.page {
+  animation: app-page-in 0.28s ease-out;
+}
+
+/* Cabeceras de vista: separador ligero y aire */
+.page .head,
+.page .page__head {
+  margin-bottom: 1.35rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--app-line-subtle);
+}
+
+/* Estados vacíos: se leen como “placeholder” guiado, no como error */
+.page .empty-card {
+  text-align: center;
+  border: 2px dashed color-mix(in srgb, var(--mat-sys-outline-variant) 88%, transparent);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--mat-sys-surface-container-low) 88%, #fff) 0%,
+    color-mix(in srgb, var(--mat-sys-surface) 96%, #fff) 100%
+  );
+}
+
+.page .empty-card .mat-mdc-card-content {
+  padding: 2.25rem 1.5rem !important;
+}
+
+.page .empty-card .empty__title {
+  font-family: var(--app-font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+body {
+  color-scheme: light dark;
+  margin: 0;
+  min-height: 100%;
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+  letter-spacing: 0.01em;
+  /* Fondo “fintech”: oscuro premium con brillo violeta/rose, sin ruido */
+  background-color: light-dark(#f3f5fb, #0b0a12);
+  background-image:
+    radial-gradient(ellipse 120% 85% at 65% -20%, color-mix(in srgb, var(--mat-sys-primary) 18%, transparent), transparent 56%),
+    radial-gradient(ellipse 85% 60% at 10% 105%, color-mix(in srgb, var(--mat-sys-tertiary) 14%, transparent), transparent 58%),
+    linear-gradient(180deg, light-dark(#fcfdff, #0b0a12) 0%, light-dark(#f3f5fb, #0a0a11) 38%, light-dark(#eef1f8, #07070d) 100%);
+  background-attachment: fixed;
+}
+
+app-root {
+  display: block;
+  min-height: 100dvh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+/* Títulos de página: tipografía display */
+h1,
+h2,
+.mat-headline-small,
+.mat-headline-medium,
+.mat-title-large {
+  font-family: var(--app-font-display);
+  letter-spacing: -0.02em;
+}
+
+/* Tarjetas Material: superficie casi papel, borde y hover discretos */
+.mat-mdc-card {
+  border-radius: var(--app-radius-md) !important;
+  border: 1px solid color-mix(in srgb, var(--mat-sys-outline-variant) 56%, transparent);
+  background-color: var(--app-glass) !important;
+  backdrop-filter: blur(10px);
+  transition:
+    box-shadow 0.22s ease,
+    transform 0.22s ease,
+    border-color 0.22s ease;
+}
+
+.mat-mdc-card:hover {
+  border-color: color-mix(in srgb, var(--mat-sys-outline-variant) 45%, transparent);
+  box-shadow: var(--app-shadow-soft);
+}
+
+/* Chips más compactos y legibles en listas */
+.mat-mdc-chip {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* Botones: pill + micro-animación suave (sensación de app bancaria) */
+.mat-mdc-button-base {
+  border-radius: 999px !important;
+}
+
+.mat-mdc-raised-button,
+.mat-mdc-unelevated-button {
+  box-shadow: 0 12px 30px color-mix(in srgb, var(--mat-sys-primary) 18%, transparent);
+}
+
+.mat-mdc-raised-button:hover,
+.mat-mdc-unelevated-button:hover {
+  transform: translateY(-1px);
+}
+
+/* Disabled: sin “lift” y con opacidad consistente */
+.mat-mdc-button-base:disabled {
+  opacity: 0.6;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Tablas: cabecera y filas */
+.mat-mdc-table {
+  background: transparent !important;
+}
+
+.mat-mdc-header-row {
+  background-color: color-mix(in srgb, var(--mat-sys-surface-container-high) 88%, transparent) !important;
+}
+
+.mat-mdc-row:hover .mat-mdc-cell {
+  background-color: color-mix(in srgb, var(--mat-sys-on-surface) 4%, transparent);
+}
+
+/* Campos de formulario outline */
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+/* Toolbar Material: sombra suave */
+.mat-toolbar {
+  box-shadow: var(--app-shadow-soft);
+}
+
+/* SnackBar */
+.toast-success {
+  /* Éxito visible (verde) */
+  --mat-snack-bar-container-color: #16a34a;
+  --mat-snack-bar-supporting-text-color: #fff;
+  --mat-snack-bar-button-color: #fff;
+}
+
+.toast-error {
+  --mat-snack-bar-container-color: var(--mat-sys-error-container);
+  --mat-snack-bar-supporting-text-color: var(--mat-sys-on-error-container);
+  --mat-snack-bar-button-color: var(--mat-sys-on-error-container);
+}
+
+.toast-info {
+  --mat-snack-bar-container-color: var(--mat-sys-tertiary-container);
+  --mat-snack-bar-supporting-text-color: var(--mat-sys-on-tertiary-container);
+  --mat-snack-bar-button-color: var(--mat-sys-on-tertiary-container);
+}
+
+@keyframes app-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Toast: más padding, tipografía, sombra y un poco más arriba */
+.mat-mdc-snack-bar-container.toast-success,
+.mat-mdc-snack-bar-container.toast-error,
+.mat-mdc-snack-bar-container.toast-info {
+  transform: translateY(-14px);
+  animation: app-toast-in 0.22s ease-out;
+}
+
+.mat-mdc-snack-bar-container.toast-success .mdc-snackbar__surface,
+.mat-mdc-snack-bar-container.toast-error .mdc-snackbar__surface,
+.mat-mdc-snack-bar-container.toast-info .mdc-snackbar__surface {
+  padding: 14px 14px;
+  border-radius: 16px;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.35), 0 8px 22px rgba(0, 0, 0, 0.22);
+}
+
+.mat-mdc-snack-bar-container.toast-success .mdc-snackbar__label,
+.mat-mdc-snack-bar-container.toast-error .mdc-snackbar__label,
+.mat-mdc-snack-bar-container.toast-info .mdc-snackbar__label {
+  font-size: 0.95rem;
+  line-height: 1.3;
+}

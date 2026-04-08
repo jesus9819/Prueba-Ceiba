@@ -1,0 +1,66 @@
+h2 {
+  margin: 0;
+}
+
+.muted {
+  opacity: 0.88;
+  margin: 6px 0 0;
+}
+
+.loading-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 48px 16px;
+}
+
+.empty__title {
+  margin-bottom: 0.35rem;
+}
+
+.alert {
+  border-radius: var(--app-radius-md, 14px);
+  padding: 12px 14px;
+  margin-bottom: 14px;
+}
+
+.alert--error {
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+}
+
+.table-card {
+  overflow: hidden;
+}
+
+.table-card .mat-mdc-card-content {
+  padding: 0 !important;
+}
+
+.table-scroll {
+  overflow: auto;
+  max-height: min(58vh, 520px);
+}
+
+.tx-table {
+  width: 100%;
+}
+
+.tx-table .mat-mdc-header-cell {
+  font-family: var(--app-font-display, 'Plus Jakarta Sans', sans-serif);
+  font-weight: 700 !important;
+  font-size: 0.72rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 72%, transparent) !important;
+}
+
+.cell-numeric {
+  text-align: right;
+  font-weight: 600;
+}
+
+@media (max-width: 720px) {
+  .tx-table {
+    min-width: 640px;
+  }
+}
